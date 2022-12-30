@@ -8,12 +8,10 @@ export default class BypassNSFW extends Plugin {
       user.nsfwAllowed = true
     } else {
       try {
-        const handleConnect = () => {
-          FluxDispatcher.unsubscribe("CONNECTION_OPEN", handleConnect);
+        FluxDispatcher.subscribe("CONNECTION_OPEN", () => {
           const user = UserStore.getCurrentUser();
           user.nsfwAllowed = true
-        }
-        FluxDispatcher.subscribe("CONNECTION_OPEN", handleConnect);
+        });
       } catch (error) {
         this.logger.error((error as Error).stack)
       }
