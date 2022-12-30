@@ -1,4 +1,4 @@
-# [BypassNSFW](https://github.com/aeongdesu/lewdrn/blob/main/blob/builds/BypassNSFW.zip?raw=true)
+# [BypassNSFW](https://github.com/aeongdesu/lewdrn/blob/builds/BypassNSFW.zip?raw=true)
 
 > **Warning**\
 > I don't know about tos but isn't it accessible from old discord app? 
