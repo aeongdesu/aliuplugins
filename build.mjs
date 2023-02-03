@@ -1,4 +1,4 @@
-// stole from https://github.com/Martinz64/AliucordRN-Plugins/blob/main/build.mjs
+// stole from https://github.com/amsyarasyiq/aliucordrn-plugins/blob/master/build.mjs
 import { spawnSync, execSync } from "child_process";
 import { platform } from "process";
 import { existsSync } from "fs";
