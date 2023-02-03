@@ -7,6 +7,6 @@ Next time do not use your real information :tf:
 > I don't know about tos but isn't it accessible from old discord app?
 
 ## [SlashReload](https://github.com/aeongdesu/aliuplugins/blob/builds/SlashReload.zip?raw=true)
-/reload to reload
+/reload to reload discord
 
 I can't touch react sorry
