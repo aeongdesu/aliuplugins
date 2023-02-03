@@ -3,15 +3,15 @@ import { FluxDispatcher, UserStore } from 'aliucord/metro';
 
 export default class BypassNSFW extends Plugin {
   public async start() {
-    if (UserStore.getCurrentUser()) {
+    const toAllow = () => {
       const user = UserStore.getCurrentUser();
       user.nsfwAllowed = true
-    } else {
+    }
+
+    if (UserStore.getCurrentUser()) toAllow()
+    else {
       try {
-        FluxDispatcher.subscribe("CONNECTION_OPEN", () => {
-          const user = UserStore.getCurrentUser();
-          user.nsfwAllowed = true
-        });
+        FluxDispatcher.subscribe("CONNECTION_OPEN", () => toAllow());
       } catch (error) {
         this.logger.error((error as Error).stack)
       }

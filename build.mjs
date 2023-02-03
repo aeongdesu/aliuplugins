@@ -1,4 +1,5 @@
-import { spawnSync } from "child_process";
+// stole from https://github.com/Martinz64/AliucordRN-Plugins/blob/main/build.mjs
+import { spawnSync, execSync } from "child_process";
 import { platform } from "process";
 import { existsSync } from "fs";
 import { join } from "path";
@@ -12,15 +13,24 @@ function check(bool, message) {
 }
 
 let watch;
+let deploy;
 let plugin = argv[2];
 if (plugin === "--watch") {
     watch = true;
+    plugin = argv[3];
+} else if (plugin === "--deploy") {
+    deploy = true;
     plugin = argv[3];
 }
 
 check(!!plugin, `Usage: ${argv.join(" ")} <PLUGIN>`);
 
-const path = join(plugin, "index.ts");
+let path = null
+if (existsSync(join(plugin, "index.ts"))) {
+    path = join(plugin, "index.ts")
+} else if (existsSync(join(plugin, "index.tsx"))) {
+    path = join(plugin, "index.tsx")
+}
 check(existsSync(path), `No such file: ${path}`);
 
 const proc = spawnSync((platform === "win32") ? ".\\node_modules\\.bin\\rollup.cmd" : "node_modules/.bin/rollup", ["-c", "--configPlugin", "typescript", watch && "--watch"].filter(Boolean), {
@@ -33,4 +43,11 @@ const proc = spawnSync((platform === "win32") ? ".\\node_modules\\.bin\\rollup.c
 
 if (proc.error) {
     console.error(proc.error)
+} else if (deploy) {
+    const exec = (cmd) => execSync(cmd, { stdio: "inherit" });
+    console.log("Deploying plugin to device...");
+    exec(`adb push ./dist/${plugin}.zip /sdcard/AliucordRN/plugins/`);
+    // should rename package name if you changed
+    exec(`adb shell am force-stop com.aliucord`)
+    exec(`adb shell am start -n com.aliucord/com.discord.main.MainActivity`)
 }
