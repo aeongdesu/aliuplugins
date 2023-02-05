@@ -1,0 +1,14 @@
+{
+    "authors": [
+        {
+            "id": "892128204150685769",
+            "name": "cloudburst"
+        },
+        {
+            "id": "757982547861962752",
+            "name": "sapphire"
+        }
+    ],
+    "version": "1.1.0",
+    "description": "Useful for devs. Find modules using /commands"
+}

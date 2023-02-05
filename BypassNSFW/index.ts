@@ -8,7 +8,7 @@ export default class BypassNSFW extends Plugin {
       user.nsfwAllowed = true
     }
 
-    if (UserStore.getCurrentUser()) toAllow()
+    if (UserStore.getCurrentUser()) toAllow();
     else {
       try {
         FluxDispatcher.subscribe("CONNECTION_OPEN", () => toAllow());
