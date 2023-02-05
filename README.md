@@ -6,8 +6,8 @@ Next time do not use your real information :tf:
 > **Note**\
 > I don't know about tos but isn't it accessible from old discord app?
 
-## [SlashReload](https://github.com/aeongdesu/aliuplugins/blob/builds/SlashReload.zip?raw=true)
-/reload to reload discord
+## [SlashReloadButton](https://github.com/aeongdesu/aliuplugins/blob/builds/SlashReloadButton.zip?raw=true)
+`/reload` or reload button to reload discord
 
 I can't touch react sorry
 
