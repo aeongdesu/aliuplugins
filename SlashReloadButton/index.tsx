@@ -26,7 +26,7 @@ export default class SlashReloadButton extends Plugin {
                     const { children } = props;
                     // I can't touch react sorry
                     // under aliucord settings
-                    children.splice(6, 0, <>
+                    children.splice(5, 0, <>
                         <FormRow
                             leading={<FormRow.Icon source={getAssetId("ic_sync_24px")} />}
                             label="Reload Discord"
