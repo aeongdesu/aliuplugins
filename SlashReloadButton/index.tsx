@@ -4,8 +4,6 @@ import { Plugin } from "aliucord/entities";
 // @ts-ignore
 import { Dialog, ReactNative, Forms, React, getByName, Locale } from "aliucord/metro";
 
-// todo: find aliucord settings in children?
-
 export default class SlashReloadButton extends Plugin {
     public async start() {
         this.commands.registerCommand({
