@@ -1,5 +1,5 @@
-import { Plugin } from 'aliucord/entities';
-import { FluxDispatcher, UserStore } from 'aliucord/metro';
+import { Plugin } from "aliucord/entities";
+import { FluxDispatcher, UserStore } from "aliucord/metro";
 
 export default class BypassNSFW extends Plugin {
   public async start() {
@@ -13,7 +13,7 @@ export default class BypassNSFW extends Plugin {
       try {
         FluxDispatcher.subscribe("CONNECTION_OPEN", () => toAllow());
       } catch (error) {
-        this.logger.error((error as Error).stack)
+        this.logger.error((error as Error).stack);
       }
     }
   }
