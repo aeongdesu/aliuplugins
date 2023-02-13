@@ -66,11 +66,11 @@ export default class Osu extends Plugin {
                 const data = await fetchdata.json();
                 if (data.message) return ClydeUtils.sendBotMessage(ctx.channel.id, data.message);
                 const msg = `> **${data.username}: ${data.pp}pp (#${data.globalRank.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ${data.countryCode}${data.countryRank.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")})**
-    <https://osu.ppy.sh/users/${data.id}>
-> Accuracy: \`${data.accuracy}%\` • Level: \`${data.level}\`
-> Playcount: \`${data.playCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\` (\`${Math.floor((data.timePlayedInMs / (1000 * 60 * 60)))} hrs\`)
-> Ranks: **SSH** \`${data.ranks.ss.silver}\` **SS** \`${data.ranks.ss.gold}\` **SH** \`${data.ranks.s.silver}\` **S** \`${data.ranks.s.gold}\` **A** \`${data.ranks.a}\`\n
-> Joined osu! <t:${newUYDate(data.joinDate)}:f>`;
+                            <https://osu.ppy.sh/users/${data.id}>
+                            > Accuracy: \`${data.accuracy}%\` • Level: \`${data.level}\`
+                            > Playcount: \`${data.playCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\` (\`${Math.floor((data.timePlayedInMs / (1000 * 60 * 60)))} hrs\`)
+                            > Ranks: **SSH** \`${data.ranks.ss.silver}\` **SS** \`${data.ranks.ss.gold}\` **SH** \`${data.ranks.s.silver}\` **S** \`${data.ranks.s.gold}\` **A** \`${data.ranks.a}\`\n
+                            > Joined osu! <t:${newUYDate(data.joinDate)}:f>`.replace(/^\s+/gm, "")
 
                 if (send) return MessageActions.sendMessage(ctx.channel.id, { content: msg });
                 else return ClydeUtils.sendBotMessage(ctx.channel.id, msg);
