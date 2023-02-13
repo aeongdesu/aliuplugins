@@ -8,6 +8,7 @@ export default class AccountSwitcher extends Plugin {
         const config = getByProps("MultiAccountMobileExperiment").MultiAccountMobileExperiment.getCurrentConfig();
         if (!config.isMultiAccountMobileEnabled) {
             config.isMultiAccountMobileEnabled = true;
+            disablePlugin("AccountSwitcher");
         } else {
             this.logger.info("Already enabled MultiAccount experiment, stopping..")
             disablePlugin("AccountSwitcher");
