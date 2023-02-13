@@ -3,12 +3,16 @@ import { Forms, ReactNative, getByProps, MessageActions } from "aliucord/metro";
 import { ApplicationCommandOptionType } from "aliucord/api";
 const { FormSection, FormInput, FormDivider } = Forms;
 const { ScrollView } = ReactNative;
-declare const aliucord: any;
-let defaultUsername: string
-let defaultID: number;
 
-// wip
-// make settings for default username or id (not working rn)
+// todo
+// use osu!api v1 or v2
+// save settings
+
+let clientID: number;
+let clientSecret: string;
+
+let defaultUsername: string;
+let defaultID: number;
 
 export default class Osu extends Plugin {
     public async start() {
@@ -53,11 +57,11 @@ export default class Osu extends Plugin {
 
                     return +new Date(yyyy, mm, dd, hh, mi, secs) / 1000;
                 }
-                const username = getOption("username", ApplicationCommandOptionType.STRING);
+                const username = getOption("username", ApplicationCommandOptionType.STRING) || defaultUsername;
                 const id = getOption("id", ApplicationCommandOptionType.NUMBER) || defaultID;
                 const send = getOption("send", ApplicationCommandOptionType.BOOLEAN) || false;
                 if (!username && !id) return ClydeUtils.sendBotMessage(ctx.channel.id, "give me username or id :exploding_head:");
-                const fetchdata = await fetch(`https://newty.dev/api/osu${username ? "?username=" : "?id="}${username ? username : id}`, { method: "GET" });
+                const fetchdata = await fetch(`https://newty.dev/api/osu${username ? `?username=${username}` : `?id=${id}`}`, { method: "GET" });
                 if (!fetchdata.ok) return ClydeUtils.sendBotMessage(ctx.channel.id, "Failed to fetch data");
                 const data = await fetchdata.json();
                 if (data.message) return ClydeUtils.sendBotMessage(ctx.channel.id, data.message);
@@ -77,37 +81,57 @@ export default class Osu extends Plugin {
         this.commands.unregisterAll();
     }
     public SettingsModal() {
-        // why crash help
-        const Navigation = aliucord.metro.Navigation ?? getByProps("push", "pushLazy", "pop");
-        const DiscordNavigator = aliucord.metro.DiscordNavigator ?? getByProps("getRenderCloseButton");
+        const Navigation = getByProps("push", "pushLazy", "pop");
+        const DiscordNavigator = getByProps("getRenderCloseButton");
         const { default: Navigator, getRenderCloseButton } = DiscordNavigator;
+
+        const SettingsPage = () => {
+            return (<>
+                {/* @ts-ignore */}
+                <ScrollView>
+                    <FormSection title="osu!api Configurations">
+                        <FormInput
+                            title="Client ID"
+                            value={clientID}
+                            placeholder="00000"
+                            onChange={(v: number) => clientID = v}
+                        />
+                        <FormDivider />
+                        <FormInput
+                            title="Client Secret"
+                            value={clientSecret}
+                            placeholder="SufZdHfucPADfK9LJn2VcEHuC7FGYpUaF9m4S8m6"
+                            onChange={(v: string) => clientSecret = v}
+                        />
+                    </FormSection>
+                    <FormSection title="Default Configurations">
+                        <FormInput
+                            title="profile username"
+                            value={defaultUsername}
+                            placeholder="peppy"
+                            onChange={(v: string) => defaultUsername = v}
+                        />
+                        <FormDivider />
+                        <FormInput
+                            title="profile id"
+                            value={defaultID}
+                            placeholder="2"
+                            onChange={(v: number) => defaultID = v}
+                        />
+                    </FormSection>
+                </ScrollView>
+            </>)
+        }
 
         return (
             <Navigator
-                initialRouteName="Osusettings"
+                initialRouteName="osu! settings"
                 goBackOnBackPress={true}
                 screens={{
                     OsuSettings: {
-                        title: "OsuSettings",
+                        title: "osu! settings",
                         headerLeft: getRenderCloseButton(() => Navigation.pop()),
-                        render: (<>
-                            {/* @ts-ignore */}
-                            <ScrollView>
-                                    <FormSection title="Configurations" android_noDivider={true}>
-                                        <FormInput
-                                            title="default profile username"
-                                            value={defaultUsername}
-                                            onChange={(v: any) => defaultUsername = v}
-                                        />
-                                        <FormDivider />
-                                        <FormInput
-                                            title="default profile id"
-                                            value={defaultID}
-                                            onChange={(v: any) => defaultID = v}
-                                        />
-                                    </FormSection>
-                            </ScrollView>
-                        </>)
+                        render: SettingsPage
                     }
                 }}
             />
