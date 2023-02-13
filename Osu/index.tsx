@@ -1,10 +1,14 @@
 import { Plugin } from "aliucord/entities";
-import { getByProps, MessageActions } from "aliucord/metro";
+import { Forms, ReactNative, getByProps, MessageActions } from "aliucord/metro";
 import { ApplicationCommandOptionType } from "aliucord/api";
+const { FormSection, FormInput, FormDivider } = Forms;
+const { ScrollView } = ReactNative;
+declare const aliucord: any;
+let defaultUsername: string
+let defaultID: number;
 
 // wip
-// make settings for default username or id
-// date to snowflare (hard)
+// make settings for default username or id (not working rn)
 
 export default class Osu extends Plugin {
     public async start() {
@@ -34,34 +38,80 @@ export default class Osu extends Plugin {
             ],
             execute: async (args, ctx) => {
                 const getOption = (name: string, type: number) => {
-                    return args.find(x => x.type == type && x.name == name)?.value
+                    return args.find(x => x.type == type && x.name == name)?.value;
                 }
-                const timestampToSnowflake = (date: string) => { // wip
-                    const DiscordEpoch = 1420070400000
-                    const result = 0
-                    return `<t:${result}:>`
+                // https://stackoverflow.com/a/64454486
+                function newUYDate(pDate: any) {
+                    const dd = pDate.split("/")[0].padStart(2, "0");
+                    let mm = pDate.split("/")[1].padStart(2, "0");
+                    const yyyy = pDate.split("/")[2].split(" ")[0];
+                    const hh = pDate.split("/")[2].split(" ")[1].split(":")[0].padStart(2, "0");
+                    const mi = pDate.split("/")[2].split(" ")[1].split(":")[1].padStart(2, "0");
+                    const secs = pDate.split("/")[2].split(" ")[1].split(":")[2].padStart(2, "0");
+
+                    mm = (parseInt(mm) - 1).toString(); // January is 0
+
+                    return +new Date(yyyy, mm, dd, hh, mi, secs) / 1000;
                 }
-                const username = getOption("username", ApplicationCommandOptionType.STRING)
-                const id = getOption("id", ApplicationCommandOptionType.NUMBER)
-                const send = getOption("send", ApplicationCommandOptionType.BOOLEAN) || false
-                if (!username && !id) return ClydeUtils.sendBotMessage(ctx.channel.id, "give me username or id :exploding_head:")
-                const fetchdata = await fetch(`https://newty.dev/api/osu${username ? "?username=" : "?id="}${username ? username : id}`, { method: "GET" })
-                if (!fetchdata.ok) return ClydeUtils.sendBotMessage(ctx.channel.id, "Failed to fetch data")
-                const data = await fetchdata.json()
-                if (data.message) return ClydeUtils.sendBotMessage(ctx.channel.id, data.message)
-                const msg = `> ${data.username}: ${data.pp}pp (#${data.globalRank.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ${data.countryCode}${data.countryRank.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")})\n
+                const username = getOption("username", ApplicationCommandOptionType.STRING);
+                const id = getOption("id", ApplicationCommandOptionType.NUMBER) || defaultID;
+                const send = getOption("send", ApplicationCommandOptionType.BOOLEAN) || false;
+                if (!username && !id) return ClydeUtils.sendBotMessage(ctx.channel.id, "give me username or id :exploding_head:");
+                const fetchdata = await fetch(`https://newty.dev/api/osu${username ? "?username=" : "?id="}${username ? username : id}`, { method: "GET" });
+                if (!fetchdata.ok) return ClydeUtils.sendBotMessage(ctx.channel.id, "Failed to fetch data");
+                const data = await fetchdata.json();
+                if (data.message) return ClydeUtils.sendBotMessage(ctx.channel.id, data.message);
+                const msg = `> **${data.username}: ${data.pp}pp (#${data.globalRank.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ${data.countryCode}${data.countryRank.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")})**
+    <https://osu.ppy.sh/users/${data.id}>
 > Accuracy: \`${data.accuracy}%\` • Level: \`${data.level}\`
 > Playcount: \`${data.playCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\` (\`${Math.floor((data.timePlayedInMs / (1000 * 60 * 60)))} hrs\`)
-> Ranks: **SSH** \`${data.ranks.ss.silver}\` **SS** \`${data.ranks.ss.gold}\` **SH** \`${data.ranks.s.silver}\` **S** \`${data.ranks.s.gold}\` **A** \`${data.ranks.a}\`
+> Ranks: **SSH** \`${data.ranks.ss.silver}\` **SS** \`${data.ranks.ss.gold}\` **SH** \`${data.ranks.s.silver}\` **S** \`${data.ranks.s.gold}\` **A** \`${data.ranks.a}\`\n
+> Joined osu! <t:${newUYDate(data.joinDate)}:f>`;
 
-> Joined osu! ${data.joinDate}`
-
-                if (send) return MessageActions.sendMessage(ctx.channel.id, { content: msg })
-                else return ClydeUtils.sendBotMessage(ctx.channel.id, msg)
+                if (send) return MessageActions.sendMessage(ctx.channel.id, { content: msg });
+                else return ClydeUtils.sendBotMessage(ctx.channel.id, msg);
             }
         });
     }
     public stop() {
-        this.commands.unregisterAll()
+        this.commands.unregisterAll();
+    }
+    public SettingsModal() {
+        // why crash help
+        const Navigation = aliucord.metro.Navigation ?? getByProps("push", "pushLazy", "pop");
+        const DiscordNavigator = aliucord.metro.DiscordNavigator ?? getByProps("getRenderCloseButton");
+        const { default: Navigator, getRenderCloseButton } = DiscordNavigator;
+
+        return (
+            <Navigator
+                initialRouteName="Osusettings"
+                goBackOnBackPress={true}
+                screens={{
+                    OsuSettings: {
+                        title: "OsuSettings",
+                        headerLeft: getRenderCloseButton(() => Navigation.pop()),
+                        render: (<>
+                            {/* @ts-ignore */}
+                            <ScrollView>
+                                    <FormSection title="Configurations" android_noDivider={true}>
+                                        <FormInput
+                                            title="default profile username"
+                                            value={defaultUsername}
+                                            onChange={(v: any) => defaultUsername = v}
+                                        />
+                                        <FormDivider />
+                                        <FormInput
+                                            title="default profile id"
+                                            value={defaultID}
+                                            onChange={(v: any) => defaultID = v}
+                                        />
+                                    </FormSection>
+                            </ScrollView>
+                        </>)
+                    }
+                }}
+            />
+        );
+
     }
 }
