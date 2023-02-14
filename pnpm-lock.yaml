@@ -5,7 +5,7 @@ specifiers:
   '@aliucord/rollup-plugin': ^1.0.4
   '@rollup/plugin-typescript': ^8.5.0
   '@types/node': ^17.0.45
-  '@types/react': ^18.0.27
+  '@types/react': ^18.0.28
   '@types/react-native': ^0.67.18
   aliucord: ^0.1.0
   rollup: ^2.79.1
@@ -18,7 +18,7 @@ devDependencies:
   '@aliucord/rollup-plugin': 1.0.4_pkdjbs5srttgfxo56slb6vtbgy
   '@rollup/plugin-typescript': 8.5.0_bhcmvni67fkldpaxrtldxbogce
   '@types/node': 17.0.45
-  '@types/react': 18.0.27
+  '@types/react': 18.0.28
   '@types/react-native': 0.67.18
   aliucord: 0.1.0
   rollup: 2.79.1
@@ -258,8 +258,8 @@ packages:
       csstype: 3.1.1
     dev: true
 
-  /@types/react/18.0.27:
-    resolution: {integrity: sha512-3vtRKHgVxu3Jp9t718R9BuzoD4NcQ8YJ5XRzsSKxNDiDonD2MXIT1TmSkenxuCycZJoQT5d2vE8LwWJxBC1gmA==}
+  /@types/react/18.0.28:
+    resolution: {integrity: sha512-RD0ivG1kEztNBdoAK7lekI9M+azSnitIn85h4iOiaLjaTrMjzslhaqCGaI4IyCJ1RljWiLCEu4jyrLLgqxBTew==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
@@ -273,7 +273,7 @@ packages:
   /aliucord/0.1.0:
     resolution: {integrity: sha512-HKeMjiKoKyLyJZJjYm2z2BliSdowGg7ngstcp62mIe86qyj4wfqSd0pr3vh3ouKn+Vj6AXSXFrOUE/AT5IbUXw==}
     dependencies:
-      react-devtools-core: 4.27.1
+      react-devtools-core: 4.27.2
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -329,8 +329,8 @@ packages:
     engines: {node: '>=8.6'}
     dev: true
 
-  /react-devtools-core/4.27.1:
-    resolution: {integrity: sha512-qXhcxxDWiFmFAOq48jts9YQYe1+wVoUXzJTlY4jbaATzyio6dd6CUGu3dXBhREeVgpZ+y4kg6vFJzIOZh6vY2w==}
+  /react-devtools-core/4.27.2:
+    resolution: {integrity: sha512-8SzmIkpO87alD7Xr6gWIEa1jHkMjawOZ+6egjazlnjB4UUcbnzGDf/vBJ4BzGuWWEM+pzrxuzsPpcMqlQkYK2g==}
     dependencies:
       shell-quote: 1.8.0
       ws: 7.5.9

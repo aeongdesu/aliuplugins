@@ -1,22 +1,41 @@
 import { Plugin } from "aliucord/entities";
 import { Forms, ReactNative, getByProps, MessageActions } from "aliucord/metro";
 import { ApplicationCommandOptionType } from "aliucord/api";
+import * as React from "react";
 const { FormSection, FormInput, FormDivider } = Forms;
 const { ScrollView } = ReactNative;
 
 // todo
 // use osu!api v1 or v2
-// save settings
+let dude;
+const settingsInstance = () => dude.settings;
 
-let clientID: number;
-let clientSecret: string;
-
-let defaultUsername: string;
-let defaultID: number;
+const useSettings = (name?: string) => {
+    const [, forceUpdate] = React.useReducer(x => x + 1, 0);
+    return {
+        get(key, defaultValue?) {
+            if (name) {
+                return settingsInstance().get(name, {})[key] ?? defaultValue;
+            }
+            return settingsInstance().get(key, defaultValue);
+        },
+        set(key, value) {
+            if (name) {
+                const obj = settingsInstance().get(name, {});
+                obj[key] = value.length === 0 ? undefined : value;
+                settingsInstance().set(name, obj);
+            } else {
+                settingsInstance().set(key, value);
+            }
+            forceUpdate();
+        }
+    };
+}
 
 export default class Osu extends Plugin {
     public async start() {
-        const ClydeUtils = getByProps("sendBotMessage")
+        dude = this;
+        const ClydeUtils = getByProps("sendBotMessage");
         this.commands.registerCommand({
             name: "osu",
             description: "Search osu!standard stats of someone.",
@@ -41,6 +60,8 @@ export default class Osu extends Plugin {
                 }
             ],
             execute: async (args, ctx) => {
+                const { get } = useSettings();
+
                 const getOption = (name: string, type: number) => {
                     return args.find(x => x.type == type && x.name == name)?.value;
                 }
@@ -57,8 +78,8 @@ export default class Osu extends Plugin {
 
                     return +new Date(yyyy, mm, dd, hh, mi, secs) / 1000;
                 }
-                const username = getOption("username", ApplicationCommandOptionType.STRING) || defaultUsername;
-                const id = getOption("id", ApplicationCommandOptionType.NUMBER) || defaultID;
+                const username = getOption("username", ApplicationCommandOptionType.STRING) || get("username") || false;
+                const id = getOption("id", ApplicationCommandOptionType.NUMBER) || get("id") || false;
                 const send = getOption("send", ApplicationCommandOptionType.BOOLEAN) || false;
                 if (!username && !id) return ClydeUtils.sendBotMessage(ctx.channel.id, "give me username or id :exploding_head:");
                 const fetchdata = await fetch(`https://newty.dev/api/osu${username ? `?username=${username}` : `?id=${id}`}`, { method: "GET" });
@@ -81,6 +102,7 @@ export default class Osu extends Plugin {
         this.commands.unregisterAll();
     }
     public SettingsModal() {
+        const { get, set } = useSettings();
         const Navigation = getByProps("push", "pushLazy", "pop");
         const DiscordNavigator = getByProps("getRenderCloseButton");
         const { default: Navigator, getRenderCloseButton } = DiscordNavigator;
@@ -92,31 +114,31 @@ export default class Osu extends Plugin {
                     <FormSection title="osu!api Configurations">
                         <FormInput
                             title="Client ID"
-                            value={clientID}
+                            value={get("clientID")}
                             placeholder="00000"
-                            onChange={(v: number) => clientID = v}
+                            onChange={v => set("clientID", v)}
                         />
                         <FormDivider />
                         <FormInput
                             title="Client Secret"
-                            value={clientSecret}
+                            value={get("clientSecret")}
                             placeholder="SufZdHfucPADfK9LJn2VcEHuC7FGYpUaF9m4S8m6"
-                            onChange={(v: string) => clientSecret = v}
+                            onChange={v => set("clientSecret", v)}
                         />
                     </FormSection>
                     <FormSection title="Default Configurations">
                         <FormInput
                             title="profile username"
-                            value={defaultUsername}
+                            value={get("username")}
                             placeholder="peppy"
-                            onChange={(v: string) => defaultUsername = v}
+                            onChange={v => set("username", v)}
                         />
                         <FormDivider />
                         <FormInput
                             title="profile id"
-                            value={defaultID}
+                            value={get("id")}
                             placeholder="2"
-                            onChange={(v: number) => defaultID = v}
+                            onChange={v => set("id", v)}
                         />
                     </FormSection>
                 </ScrollView>
