@@ -1,41 +1,44 @@
 import { Plugin } from "aliucord/entities";
-import { Forms, ReactNative, getByProps, MessageActions } from "aliucord/metro";
+import { Forms, React, Styles, ReactNative, getByProps, MessageActions, URLOpener } from "aliucord/metro";
 import { ApplicationCommandOptionType } from "aliucord/api";
-import * as React from "react";
 const { FormSection, FormInput, FormDivider } = Forms;
-const { ScrollView } = ReactNative;
+const { Text, ScrollView } = ReactNative;
+let instance;
 
 // todo
 // use osu!api v1 or v2
-let dude;
-const settingsInstance = () => dude.settings;
 
-const useSettings = (name?: string) => {
-    const [, forceUpdate] = React.useReducer(x => x + 1, 0);
-    return {
-        get(key, defaultValue?) {
-            if (name) {
-                return settingsInstance().get(name, {})[key] ?? defaultValue;
-            }
-            return settingsInstance().get(key, defaultValue);
-        },
-        set(key, value) {
-            if (name) {
-                const obj = settingsInstance().get(name, {});
-                obj[key] = value.length === 0 ? undefined : value;
-                settingsInstance().set(name, obj);
-            } else {
-                settingsInstance().set(key, value);
-            }
-            forceUpdate();
-        }
-    };
+const styles = Styles.createThemedStyleSheet({
+    subText: {
+        fontSize: 18,
+        marginTop: 15,
+        marginLeft: 15,
+        color: Styles.ThemeColorMap.HEADER_PRIMARY,
+        fontFamily: Styles.ThemeColorMap.PRIMARY_NORMAL
+    },
+    textLink: {
+        color: Styles.ThemeColorMap.TEXT_LINK
+    }
+})
+
+// https://stackoverflow.com/a/64454486
+const newUYDate = (pDate: any) => {
+    const dd = pDate.split("/")[0].padStart(2, "0");
+    let mm = pDate.split("/")[1].padStart(2, "0");
+    const yyyy = pDate.split("/")[2].split(" ")[0];
+    const hh = pDate.split("/")[2].split(" ")[1].split(":")[0].padStart(2, "0");
+    const mi = pDate.split("/")[2].split(" ")[1].split(":")[1].padStart(2, "0");
+    const secs = pDate.split("/")[2].split(" ")[1].split(":")[2].padStart(2, "0");
+
+    mm = (parseInt(mm) - 1).toString(); // January is 0
+
+    return +new Date(yyyy, mm, dd, hh, mi, secs) / 1000;
 }
 
 export default class Osu extends Plugin {
     public async start() {
-        dude = this;
-        const ClydeUtils = getByProps("sendBotMessage");
+        instance = this;
+        const { sendBotMessage } = getByProps("sendBotMessage");
         this.commands.registerCommand({
             name: "osu",
             description: "Search osu!standard stats of someone.",
@@ -60,32 +63,17 @@ export default class Osu extends Plugin {
                 }
             ],
             execute: async (args, ctx) => {
-                const { get } = useSettings();
-
                 const getOption = (name: string, type: number) => {
                     return args.find(x => x.type == type && x.name == name)?.value;
                 }
-                // https://stackoverflow.com/a/64454486
-                function newUYDate(pDate: any) {
-                    const dd = pDate.split("/")[0].padStart(2, "0");
-                    let mm = pDate.split("/")[1].padStart(2, "0");
-                    const yyyy = pDate.split("/")[2].split(" ")[0];
-                    const hh = pDate.split("/")[2].split(" ")[1].split(":")[0].padStart(2, "0");
-                    const mi = pDate.split("/")[2].split(" ")[1].split(":")[1].padStart(2, "0");
-                    const secs = pDate.split("/")[2].split(" ")[1].split(":")[2].padStart(2, "0");
-
-                    mm = (parseInt(mm) - 1).toString(); // January is 0
-
-                    return +new Date(yyyy, mm, dd, hh, mi, secs) / 1000;
-                }
-                const username = getOption("username", ApplicationCommandOptionType.STRING) || get("username") || false;
-                const id = getOption("id", ApplicationCommandOptionType.NUMBER) || get("id") || false;
+                const username = getOption("username", ApplicationCommandOptionType.STRING) || this.settings.get("username", false);
+                const id = getOption("id", ApplicationCommandOptionType.NUMBER) || this.settings.get("id", false);
                 const send = getOption("send", ApplicationCommandOptionType.BOOLEAN) || false;
-                if (!username && !id) return ClydeUtils.sendBotMessage(ctx.channel.id, "give me username or id :exploding_head:");
+                if (!username && !id) return sendBotMessage(ctx.channel.id, "give me username or id :exploding_head:");
                 const fetchdata = await fetch(`https://newty.dev/api/osu${username ? `?username=${username}` : `?id=${id}`}`, { method: "GET" });
-                if (!fetchdata.ok) return ClydeUtils.sendBotMessage(ctx.channel.id, "Failed to fetch data");
+                if (!fetchdata.ok) return sendBotMessage(ctx.channel.id, "Failed to fetch data");
                 const data = await fetchdata.json();
-                if (data.message) return ClydeUtils.sendBotMessage(ctx.channel.id, data.message);
+                if (data.message) return sendBotMessage(ctx.channel.id, data.message);
                 const msg = `> **${data.username}: ${data.pp}pp (#${data.globalRank.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ${data.countryCode}${data.countryRank.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")})**
                             <https://osu.ppy.sh/users/${data.id}>
                             > Accuracy: \`${data.accuracy}%\` • Level: \`${data.level}\`
@@ -94,7 +82,7 @@ export default class Osu extends Plugin {
                             > Joined osu! <t:${newUYDate(data.joinDate)}:f>`.replace(/^\s+/gm, "")
 
                 if (send) return MessageActions.sendMessage(ctx.channel.id, { content: msg });
-                else return ClydeUtils.sendBotMessage(ctx.channel.id, msg);
+                else return sendBotMessage(ctx.channel.id, msg);
             }
         });
     }
@@ -102,6 +90,28 @@ export default class Osu extends Plugin {
         this.commands.unregisterAll();
     }
     public SettingsModal() {
+        const settingsInstance = () => instance.settings
+        const useSettings = (name?: string) => {
+            const [, forceUpdate] = React.useReducer(x => x + 1, 0);
+            return {
+                get(key, defaultValue?) {
+                    if (name) {
+                        return settingsInstance().get(name, {})[key] ?? defaultValue;
+                    }
+                    return settingsInstance().get(key, defaultValue);
+                },
+                set(key, value) {
+                    if (name) {
+                        const obj = settingsInstance().get(name, {});
+                        obj[key] = value.length === 0 ? undefined : value;
+                        settingsInstance().set(name, obj);
+                    } else {
+                        settingsInstance().set(key, value);
+                    }
+                    forceUpdate();
+                }
+            };
+        }
         const { get, set } = useSettings();
         const Navigation = getByProps("push", "pushLazy", "pop");
         const DiscordNavigator = getByProps("getRenderCloseButton");
@@ -111,6 +121,12 @@ export default class Osu extends Plugin {
             return (<>
                 {/* @ts-ignore */}
                 <ScrollView>
+                    {/* @ts-ignore */}
+                    <Text style={styles.subText}>
+                        {/* @ts-ignore */}
+                        Currently, this plugin uses <Text style={styles.textLink} onPress={() => URLOpener.openURL("https://newty.dev")} >newty's api</Text>.
+                    </Text>
+                    {/*
                     <FormSection title="osu!api Configurations">
                         <FormInput
                             title="Client ID"
@@ -126,6 +142,7 @@ export default class Osu extends Plugin {
                             onChange={v => set("clientSecret", v)}
                         />
                     </FormSection>
+                    */}
                     <FormSection title="Default Configurations">
                         <FormInput
                             title="profile username"
