@@ -45,19 +45,19 @@ export default class Osu extends Plugin {
             options: [
                 {
                     name: "username",
-                    description: "self explanatory",
+                    description: "You can set the default value in plugin settings",
                     type: ApplicationCommandOptionType.STRING,
                     required: false
                 },
                 {
                     name: "id",
-                    description: "self explanatory",
+                    description: "You can set the default value in plugin settings",
                     type: ApplicationCommandOptionType.NUMBER,
                     required: false
                 },
                 {
                     name: "send",
-                    description: "Whether to send the resulting stats",
+                    description: "Whether to send the result",
                     type: ApplicationCommandOptionType.BOOLEAN,
                     required: false
                 }
@@ -124,7 +124,7 @@ export default class Osu extends Plugin {
                     {/* @ts-ignore */}
                     <Text style={styles.subText}>
                         {/* @ts-ignore */}
-                        Currently, this plugin uses <Text style={styles.textLink} onPress={() => URLOpener.openURL("https://newty.dev")} >newty's api</Text>.
+                        Currently, this plugin uses <Text style={styles.textLink} onPress={() => URLOpener.openURL("https://newty.dev")} >newt's api</Text>.
                     </Text>
                     {/*
                     <FormSection title="osu!api Configurations">
