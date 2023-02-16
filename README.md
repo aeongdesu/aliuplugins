@@ -25,3 +25,13 @@ Can't wait for merging [#56](https://github.com/Aliucord/AliucordRN/pull/56) so 
 stole from [c10udburst-discord/Aliucord-RightNow-Plugins](https://github.com/c10udburst-discord/Aliucord-RightNow-Plugins/tree/release/MetroTools)
 
 ![](https://user-images.githubusercontent.com/50764666/216804574-c358f8e5-20cd-4791-b752-cf7050a04bb2.png)
+
+## [Osu](https://github.com/aeongdesu/aliuplugins/blob/builds/Osu.zip?raw=true)
+Search osu!standard stats of someone.
+
+## [PetPet](https://github.com/aeongdesu/aliuplugins/blob/builds/PetPet.zip?raw=true)
+Pet someone. (horror)
+
+> **Note** \
+> Port of spinfal's enmity PetPet plugin.\
+> Thanks to pylix for idea but I don't like it :trolley:
