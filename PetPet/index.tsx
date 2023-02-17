@@ -31,9 +31,9 @@ export default class PetPet extends Plugin {
 
                 if (!global && guildAvatar) url = `https://cdn.discordapp.com/guilds/${ctx.guild.id}/users/${userid}/avatars/${guildAvatar}.png`;
                 else url = `https://cdn.discordapp.com/avatars/${userid}/${user.avatar}.png`;
-                const petpet = await fetch(`https://petpet-api.clit.repl.co/petpet?url=${url}&size=100&delay=20&version=v2`)
+                const petpet = await fetch(`https://petpet-api.clit.repl.co/petpet?url=${url}&size=100&delay=20&version=v2`);
                 if (!petpet.ok) return sendBotMessage(ctx.channel.id, "Failed to fetch petpet");
-                const json = await petpet.json()
+                const json = await petpet.json();
                 MessageActions.sendMessage(ctx.channel.id, { content: json.result });
             }
         });
