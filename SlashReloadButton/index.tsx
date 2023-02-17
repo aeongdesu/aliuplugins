@@ -1,9 +1,10 @@
 import { findInReactTree, getAssetId } from "aliucord/utils";
-import { before, after } from "aliucord/utils/patcher";
+import { after } from "aliucord/utils/patcher";
 import { Plugin } from "aliucord/entities";
 // @ts-ignore
 import { Dialog, ReactNative, Forms, React, getByName, Locale } from "aliucord/metro";
-declare let aliucord: any;
+// @ts-ignore
+import { restartApp } from "aliucord/native";
 
 export default class SlashReloadButton extends Plugin {
     public async start() {
@@ -11,7 +12,7 @@ export default class SlashReloadButton extends Plugin {
             name: "reload",
             description: "Reload Discord",
             options: [],
-            execute: () => aliucord.native.restartApp()
+            execute: () => restartApp()
         });
         // stole from https://github.com/Aliucord/AliucordRN/blob/main/src/patches/patchSettings.tsx
         const patchUI = () => {
@@ -35,7 +36,7 @@ export default class SlashReloadButton extends Plugin {
                                 confirmText: 'Yes',
                                 cancelText: 'No',
                                 isDismissable: false,
-                                onConfirm: () => aliucord.native.restartApp()
+                                onConfirm: () => restartApp()
                             })}
                         />
                     </>)
