@@ -26,17 +26,20 @@ export default class PluginDownloader extends Plugin {
                 onPress: async () => {
                     const matches = url.match(zip);
                     try {
+                        const manifest = await fetch(url.replace(".zip", "-manifest.json"))
+                        if (!manifest.ok) return Toasts.open({ content: "Wrong plugin url!", source: getAssetId("Small") })
+                        const pluginName = (await manifest.json()).name
                         const installPlugin = async () => {
-                            await fs.download(url, `${PLUGINS_DIRECTORY}${matches[3]}.zip`);
+                            await fs.download(url, `${PLUGINS_DIRECTORY}${pluginName}.zip`);
                             await aliucord.api.startPlugins()
-                            plugin = aliucord.api.plugins[matches[3]]
+                            plugin = aliucord.api.plugins[pluginName]
                             if (plugin) return Toasts.open({ content: `Successfully installed ${plugin.manifest.name}!`, source: getAssetId("Check") })
                             else {
-                                await fs.deleteFile(`${PLUGINS_DIRECTORY}${matches[3]}.zip`)
+                                await fs.deleteFile(`${PLUGINS_DIRECTORY}${pluginName}.zip`)
                                 return Toasts.open({ content: "Failed to install plugin!", source: getAssetId("Small") })
                             }
                         }
-                        let plugin = aliucord.api.plugins[matches[3]]
+                        let plugin = aliucord.api.plugins[pluginName]
                         if (plugin) {
                             return Dialog.show({
                                 title: "Reinstall Plugin?",
@@ -49,19 +52,20 @@ export default class PluginDownloader extends Plugin {
                         }
                         installPlugin()
                     } catch {
-                        await fs.deleteFile(`${PLUGINS_DIRECTORY}${matches[3]}.zip`)
+                        const path = `${PLUGINS_DIRECTORY}${matches[3]}.zip`
+                        if (fs.exists(path)) await fs.deleteFile(path)
                         return Toasts.open({ content: "Failed to install plugin!", source: getAssetId("Small") })
                     }
                     /*Dialog.show({
                         title: "Reload required",
-                        body: `Downloaded ${matches[3]}, reload Discord?\nexport loadPlugin when (never)`,
+                        body: `Downloaded ${pluginName}, reload Discord?\nexport loadPlugin when (never)`,
                         confirmText: 'Yes',
                         cancelText: 'No and delete it',
                         isDismissable: false,
                         onConfirm: () => restartApp(),
                         onCancel: async () => {
-                            await fs.deleteFile(`${PLUGINS_DIRECTORY}${matches[3]}.zip`)
-                            Toasts.open({ content: `${matches[3]}.zip has deleted.` })
+                            await fs.deleteFile(`${PLUGINS_DIRECTORY}${pluginName}.zip`)
+                            Toasts.open({ content: `${pluginName}.zip has deleted.` })
                         }
                     })*/
                 }
