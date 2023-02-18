@@ -1,9 +1,9 @@
-import { Plugin } from "aliucord/entities";
-import { Forms, React, Styles, ReactNative, getByProps, MessageActions, URLOpener } from "aliucord/metro";
-import { ApplicationCommandOptionType } from "aliucord/api";
-const { FormSection, FormInput, FormDivider } = Forms;
-const { Text, ScrollView } = ReactNative;
-let instance;
+import { Plugin } from "aliucord/entities"
+import { Forms, React, Styles, ReactNative, getByProps, MessageActions, URLOpener } from "aliucord/metro"
+import { ApplicationCommandOptionType } from "aliucord/api"
+const { FormSection, FormInput, FormDivider } = Forms
+const { Text, ScrollView } = ReactNative
+let instance
 
 // todo
 // use osu!api v1 or v2
@@ -23,22 +23,22 @@ const styles = Styles.createThemedStyleSheet({
 
 // https://stackoverflow.com/a/64454486
 const newUYDate = (pDate: any) => {
-    const dd = pDate.split("/")[0].padStart(2, "0");
-    let mm = pDate.split("/")[1].padStart(2, "0");
-    const yyyy = pDate.split("/")[2].split(" ")[0];
-    const hh = pDate.split("/")[2].split(" ")[1].split(":")[0].padStart(2, "0");
-    const mi = pDate.split("/")[2].split(" ")[1].split(":")[1].padStart(2, "0");
-    const secs = pDate.split("/")[2].split(" ")[1].split(":")[2].padStart(2, "0");
+    const dd = pDate.split("/")[0].padStart(2, "0")
+    let mm = pDate.split("/")[1].padStart(2, "0")
+    const yyyy = pDate.split("/")[2].split(" ")[0]
+    const hh = pDate.split("/")[2].split(" ")[1].split(":")[0].padStart(2, "0")
+    const mi = pDate.split("/")[2].split(" ")[1].split(":")[1].padStart(2, "0")
+    const secs = pDate.split("/")[2].split(" ")[1].split(":")[2].padStart(2, "0")
 
-    mm = (parseInt(mm) - 1).toString(); // January is 0
+    mm = (parseInt(mm) - 1).toString() // January is 0
 
-    return +new Date(yyyy, mm, dd, hh, mi, secs) / 1000;
+    return +new Date(yyyy, mm, dd, hh, mi, secs) / 1000
 }
 
 export default class Osu extends Plugin {
     public async start() {
-        instance = this;
-        const { sendBotMessage } = getByProps("sendBotMessage");
+        instance = this
+        const { sendBotMessage } = getByProps("sendBotMessage")
         this.commands.registerCommand({
             name: "osu",
             description: "Search osu!standard stats of someone.",
@@ -64,16 +64,16 @@ export default class Osu extends Plugin {
             ],
             execute: async (args, ctx) => {
                 const getOption = (name: string, type: number) => {
-                    return args.find(x => x.type == type && x.name == name)?.value;
+                    return args.find(x => x.type == type && x.name == name)?.value
                 }
-                const username = getOption("username", ApplicationCommandOptionType.STRING) || this.settings.get("username", false);
-                const id = getOption("id", ApplicationCommandOptionType.NUMBER) || this.settings.get("id", false);
-                const send = getOption("send", ApplicationCommandOptionType.BOOLEAN) || false;
-                if (!username && !id) return sendBotMessage(ctx.channel.id, "give me username or id :exploding_head:");
-                const fetchdata = await fetch(`https://newty.dev/api/osu${username ? `?username=${username}` : `?id=${id}`}`, { method: "GET" });
-                if (!fetchdata.ok) return sendBotMessage(ctx.channel.id, "Failed to fetch data");
-                const data = await fetchdata.json();
-                if (data.message) return sendBotMessage(ctx.channel.id, data.message);
+                const username = getOption("username", ApplicationCommandOptionType.STRING) || this.settings.get("username", false)
+                const id = getOption("id", ApplicationCommandOptionType.NUMBER) || this.settings.get("id", false)
+                const send = getOption("send", ApplicationCommandOptionType.BOOLEAN) || false
+                if (!username && !id) return sendBotMessage(ctx.channel.id, "give me username or id :exploding_head:")
+                const fetchdata = await fetch(`https://newty.dev/api/osu${username ? `?username=${username}` : `?id=${id}`}`, { method: "GET" })
+                if (!fetchdata.ok) return sendBotMessage(ctx.channel.id, "Failed to fetch data")
+                const data = await fetchdata.json()
+                if (data.message) return sendBotMessage(ctx.channel.id, data.message)
                 const msg = `> **${data.username}: ${data.pp}pp (#${data.globalRank.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ${data.countryCode}${data.countryRank.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")})**
                             <https://osu.ppy.sh/users/${data.id}>
                             > Accuracy: \`${data.accuracy}%\` • Level: \`${data.level}\`
@@ -81,41 +81,41 @@ export default class Osu extends Plugin {
                             > Ranks: **SSH** \`${data.ranks.ss.silver}\` **SS** \`${data.ranks.ss.gold}\` **SH** \`${data.ranks.s.silver}\` **S** \`${data.ranks.s.gold}\` **A** \`${data.ranks.a}\`\n
                             > Joined osu! <t:${newUYDate(data.joinDate)}:f>`.replace(/^\s+/gm, "")
 
-                if (send) return MessageActions.sendMessage(ctx.channel.id, { content: msg });
-                else return sendBotMessage(ctx.channel.id, msg);
+                if (send) return MessageActions.sendMessage(ctx.channel.id, { content: msg })
+                else return sendBotMessage(ctx.channel.id, msg)
             }
-        });
+        })
     }
     public stop() {
-        this.commands.unregisterAll();
+        this.commands.unregisterAll()
     }
     public SettingsModal() {
         const settingsInstance = () => instance.settings
         const useSettings = (name?: string) => {
-            const [, forceUpdate] = React.useReducer(x => x + 1, 0);
+            const [, forceUpdate] = React.useReducer(x => x + 1, 0)
             return {
                 get(key, defaultValue?) {
                     if (name) {
-                        return settingsInstance().get(name, {})[key] ?? defaultValue;
+                        return settingsInstance().get(name, {})[key] ?? defaultValue
                     }
-                    return settingsInstance().get(key, defaultValue);
+                    return settingsInstance().get(key, defaultValue)
                 },
                 set(key, value) {
                     if (name) {
-                        const obj = settingsInstance().get(name, {});
-                        obj[key] = value.length === 0 ? undefined : value;
-                        settingsInstance().set(name, obj);
+                        const obj = settingsInstance().get(name, {})
+                        obj[key] = value.length === 0 ? undefined : value
+                        settingsInstance().set(name, obj)
                     } else {
-                        settingsInstance().set(key, value);
+                        settingsInstance().set(key, value)
                     }
-                    forceUpdate();
+                    forceUpdate()
                 }
-            };
+            }
         }
-        const { get, set } = useSettings();
-        const Navigation = getByProps("push", "pushLazy", "pop");
-        const DiscordNavigator = getByProps("getRenderCloseButton");
-        const { default: Navigator, getRenderCloseButton } = DiscordNavigator;
+        const { get, set } = useSettings()
+        const Navigation = getByProps("push", "pushLazy", "pop")
+        const DiscordNavigator = getByProps("getRenderCloseButton")
+        const { default: Navigator, getRenderCloseButton } = DiscordNavigator
 
         const SettingsPage = () => {
             return (<>
@@ -174,7 +174,7 @@ export default class Osu extends Plugin {
                     }
                 }}
             />
-        );
+        )
 
     }
 }

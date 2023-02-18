@@ -1,36 +1,36 @@
 // like https://github.com/redstonekasi/vendetta-plugins/blob/main/plugins/url-import/src/index.js
 
 declare let aliucord: any
-import { Plugin } from "aliucord/entities";
+import { Plugin } from "aliucord/entities"
 // @ts-ignore
-import { getByProps, Dialog, Toasts } from "aliucord/metro";
+import { getByProps, Dialog, Toasts } from "aliucord/metro"
 import { getAssetId } from "aliucord/utils"
 // @ts-ignore
 import { PLUGINS_DIRECTORY } from "aliucord/utils/constants"
 import { before } from "aliucord/utils/patcher"
 // @ts-ignore
-import { fs } from "aliucord/native";
+import { fs } from "aliucord/native"
 
 const zip = new RegExp("https?://(?:github|raw\\.githubusercontent)\\.com/([A-Za-z0-9\\-_.]+)/([A-Za-z0-9\\-_.]+)/(?:raw|blob)?/?\\w+/builds/(\\w+).zip")
 
 export default class PluginDownloader extends Plugin {
     public async start() {
-        const ActionSheet = getByProps("hideActionSheet");
+        const ActionSheet = getByProps("hideActionSheet")
         before(ActionSheet, "openLazy", (ctx) => {
-            let args = ctx.args;
-            if (args[1] !== "LongPressUrl") return;
-            const [, , { header: { title: url }, options }] = args;
-            if (!zip.test(url)) return;
+            let args = ctx.args
+            if (args[1] !== "LongPressUrl") return
+            const [, , { header: { title: url }, options }] = args
+            if (!zip.test(url)) return
             options.push({
                 label: "Install Plugin",
                 onPress: async () => {
-                    const matches = url.match(zip);
+                    const matches = url.match(zip)
                     try {
                         const manifest = await fetch(url.replace(".zip", "-manifest.json"))
                         if (!manifest.ok) return Toasts.open({ content: "Wrong plugin url!", source: getAssetId("Small") })
                         const pluginName = (await manifest.json()).name
                         const installPlugin = async () => {
-                            await fs.download(url, `${PLUGINS_DIRECTORY}${pluginName}.zip`);
+                            await fs.download(url, `${PLUGINS_DIRECTORY}${pluginName}.zip`)
                             await aliucord.api.startPlugins()
                             plugin = aliucord.api.plugins[pluginName]
                             if (plugin) return Toasts.open({ content: `Successfully installed ${plugin.manifest.name}!`, source: getAssetId("Check") })
@@ -69,7 +69,7 @@ export default class PluginDownloader extends Plugin {
                         }
                     })*/
                 }
-            });
-        });
+            })
+        })
     }
 }
