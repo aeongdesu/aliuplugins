@@ -25,12 +25,14 @@ export default class PluginDownloader extends Plugin {
                 label: "Install Plugin",
                 onPress: async () => {
                     const matches = url.match(zip)
+                    const proxyurl = (name: string) => `https://cdn.jsdelivr.net/gh/${matches[1]}/${matches[2]}@builds/${name}`
                     try {
-                        const manifest = await fetch(url.replace(".zip", "-manifest.json"))
+                        const manifest = await fetch(proxyurl(`${matches[3]}-manifest.json`))
                         if (!manifest.ok) return Toasts.open({ content: "Wrong plugin url!", source: getAssetId("Small") })
                         const pluginName = (await manifest.json()).name
+
                         const installPlugin = async () => {
-                            await fs.download(url, `${PLUGINS_DIRECTORY}${pluginName}.zip`)
+                            await fs.download(proxyurl(`${pluginName}.zip`), `${PLUGINS_DIRECTORY}${pluginName}.zip`)
                             await aliucord.api.startPlugins()
                             plugin = aliucord.api.plugins[pluginName]
                             if (plugin) return Toasts.open({ content: `Successfully installed ${plugin.manifest.name}!`, source: getAssetId("Check") })
