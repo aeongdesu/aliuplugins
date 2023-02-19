@@ -28,17 +28,17 @@ export default class PluginDownloader extends Plugin {
                     const proxyurl = (name: string) => `https://cdn.jsdelivr.net/gh/${matches[1]}/${matches[2]}@builds/${name}`
                     try {
                         const manifest = await fetch(proxyurl(`${matches[3]}-manifest.json`))
-                        if (!manifest.ok) return Toasts.open({ content: "Wrong plugin url!", source: getAssetId("Small") })
+                        if (!manifest.ok) return Toasts.open({ content: "Wrong plugin URL", source: getAssetId("Small") })
                         const pluginName = (await manifest.json()).name
 
                         const installPlugin = async () => {
                             await fs.download(proxyurl(`${pluginName}.zip`), `${PLUGINS_DIRECTORY}${pluginName}.zip`)
                             await aliucord.api.startPlugins()
                             plugin = aliucord.api.plugins[pluginName]
-                            if (plugin) return Toasts.open({ content: `Successfully installed ${plugin.manifest.name}!`, source: getAssetId("Check") })
+                            if (plugin) return Toasts.open({ content: `Successfully installed ${plugin.manifest.name}`, source: getAssetId("Check") })
                             else {
                                 await fs.deleteFile(`${PLUGINS_DIRECTORY}${pluginName}.zip`)
-                                return Toasts.open({ content: "Failed to install plugin!", source: getAssetId("Small") })
+                                return Toasts.open({ content: "Failed to install plugin", source: getAssetId("Small") })
                             }
                         }
                         let plugin = aliucord.api.plugins[pluginName]
@@ -56,20 +56,8 @@ export default class PluginDownloader extends Plugin {
                     } catch {
                         const path = `${PLUGINS_DIRECTORY}${matches[3]}.zip`
                         if (fs.exists(path)) await fs.deleteFile(path)
-                        return Toasts.open({ content: "Failed to install plugin!", source: getAssetId("Small") })
+                        return Toasts.open({ content: "Failed to install plugin", source: getAssetId("Small") })
                     }
-                    /*Dialog.show({
-                        title: "Reload required",
-                        body: `Downloaded ${pluginName}, reload Discord?\nexport loadPlugin when (never)`,
-                        confirmText: 'Yes',
-                        cancelText: 'No and delete it',
-                        isDismissable: false,
-                        onConfirm: () => restartApp(),
-                        onCancel: async () => {
-                            await fs.deleteFile(`${PLUGINS_DIRECTORY}${pluginName}.zip`)
-                            Toasts.open({ content: `${pluginName}.zip has deleted.` })
-                        }
-                    })*/
                 }
             })
         })
