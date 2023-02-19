@@ -25,6 +25,11 @@ export default class PluginDownloader extends Plugin {
                 label: "Install Plugin",
                 onPress: async () => {
                     const matches = url.match(zip)
+                    /*
+                        matches[1]: username
+                        matches[2]: reponame
+                        matches[3]: filename
+                    */
                     const proxyurl = (name: string) => `https://cdn.jsdelivr.net/gh/${matches[1]}/${matches[2]}@builds/${name}`
                     try {
                         const manifest = await fetch(proxyurl(`${matches[3]}-manifest.json`))

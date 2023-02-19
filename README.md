@@ -36,3 +36,8 @@ Pet someone. (horror)
 > Port of spinfal's enmity PetPet plugin.\
 > Thanks to pylix for idea but I don't like it :trolley:\
 > ![](https://user-images.githubusercontent.com/50764666/219431771-ef7549d7-a75e-4e3a-a3b0-9098a4104260.png)
+
+## [PluginDownloader](https://github.com/aeongdesu/aliuplugins/blob/builds/PluginDownloader.zip?raw=true)
+
+install plugins easily!\
+only github raw link works
