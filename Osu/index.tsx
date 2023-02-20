@@ -1,5 +1,5 @@
 import { Plugin } from "aliucord/entities"
-import { Forms, React, Styles, ReactNative, getByProps, MessageActions, URLOpener } from "aliucord/metro"
+import { Constants, Forms, React, Styles, ReactNative, getByProps, MessageActions, URLOpener } from "aliucord/metro"
 import { ApplicationCommandOptionType } from "aliucord/api"
 const { FormSection, FormInput, FormDivider } = Forms
 const { Text, ScrollView } = ReactNative
@@ -8,16 +8,18 @@ let instance
 // todo
 // use osu!api v1 or v2
 
+const ThemeColorMap = Styles.ThemeColorMap ?? getByProps("SemanticColor").SemanticColor
+
 const styles = Styles.createThemedStyleSheet({
     subText: {
         fontSize: 18,
         marginTop: 15,
         marginLeft: 15,
-        color: Styles.ThemeColorMap.HEADER_PRIMARY,
-        fontFamily: Styles.ThemeColorMap.PRIMARY_NORMAL
+        color: ThemeColorMap.HEADER_PRIMARY,
+        fontFamily: Constants.Fonts.PRIMARY_NORMAL
     },
     textLink: {
-        color: Styles.ThemeColorMap.TEXT_LINK
+        color: ThemeColorMap.TEXT_LINK
     }
 })
 
