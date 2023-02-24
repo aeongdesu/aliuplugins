@@ -1,4 +1,5 @@
-// like https://github.com/redstonekasi/vendetta-plugins/blob/main/plugins/url-import/src/index.js
+// REFACTORING REQUIRED
+// PULL REQUESTS ARE WELCOME
 
 declare let aliucord: any
 import { Plugin } from "aliucord/entities"

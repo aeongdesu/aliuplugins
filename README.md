@@ -41,4 +41,5 @@ Pet someone. (horror)
 Install aliucord plugins easily.
 
 > **Warning** \
-> alpha version of plugin.
+> **REFACTORING REQUIRED**\
+> **PULL REQUESTS ARE WELCOME**
