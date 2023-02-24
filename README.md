@@ -38,6 +38,7 @@ Pet someone. (horror)
 > ![](https://user-images.githubusercontent.com/50764666/219431771-ef7549d7-a75e-4e3a-a3b0-9098a4104260.png)
 
 ## [PluginDownloader](https://github.com/aeongdesu/aliuplugins/blob/builds/PluginDownloader.zip?raw=true)
+Install aliucord plugins easily.
 
-install plugins easily!\
-only github raw link works
+> **Warning** \
+> alpha version of plugin.
