@@ -11,9 +11,13 @@ export default class BypassNSFW extends Plugin {
     if (UserStore.getCurrentUser()) toAllow()
     else {
       try {
-        FluxDispatcher.subscribe("CONNECTION_OPEN", () => toAllow())
-      } catch (error) {
-        this.logger.error((error as Error).stack)
+        const handle = () => {
+          FluxDispatcher.unsubscribe("CONNECTION_OPEN", handle)
+          toAllow()
+        }
+        FluxDispatcher.subscribe("CONNECTION_OPEN", handle)
+      } catch (e) {
+        this.logger.error(e)
       }
     }
   }

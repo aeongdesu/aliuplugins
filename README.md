@@ -43,3 +43,6 @@ Install aliucord plugins easily.
 > **Warning** \
 > **REFACTORING REQUIRED**\
 > **PULL REQUESTS ARE WELCOME**
+
+## [ExperimentsReborn](https://github.com/aeongdesu/aliuplugins/blob/builds/ExperimentsReborn.zip?raw=true)
+Unlock Experiments. (stole from [Beefers's vd plugins](https://github.com/Beefers/strife/blob/master/plugins/Experiments/src/index.ts))
