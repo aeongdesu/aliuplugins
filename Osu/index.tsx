@@ -15,7 +15,7 @@ const styles = Styles.createThemedStyleSheet({
         fontSize: 18,
         marginTop: 15,
         marginLeft: 15,
-        color: ThemeColorMap.HEADER_PRIMARY,
+        color: ThemeColorMap.INTERACTIVE_MUTED,
         fontFamily: Constants.Fonts.PRIMARY_NORMAL
     },
     textLink: {
