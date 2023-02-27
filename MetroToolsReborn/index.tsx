@@ -83,7 +83,7 @@ export default class MetroToolsReborn extends Plugin {
                     let query = args[0].value as string
                     const modules = searchByKeyword(query)
                     if (modules.length === 0) return ClydeUtils.sendBotMessage(ctx.channel.id, "No modules found :exploding_head:")
-                    return ClydeUtils.sendBotMessage(ctx.channel.id, modules.join("\n"))
+                    return ClydeUtils.sendBotMessage(ctx.channel.id, `\`\`\`\n${modules.join("\n")}\n\`\`\``)
                 }
             })
         } catch (ex) {
