@@ -38,4 +38,8 @@ export default class PetPet extends Plugin {
             }
         })
     }
+    
+    public stop() {
+        this.commands.unregisterAll()
+    }
 }

@@ -1,5 +1,8 @@
 import { Plugin } from "aliucord/entities"
-import { FluxDispatcher, UserStore } from "aliucord/metro"
+// @ts-ignore
+import { FluxDispatcher, UserStore, Dialog } from "aliucord/metro"
+// @ts-ignore
+import { restartApp } from "aliucord/native"
 
 export default class BypassNSFW extends Plugin {
   public async start() {
@@ -20,5 +23,14 @@ export default class BypassNSFW extends Plugin {
         this.logger.error(e)
       }
     }
+  }
+  public stop() {
+    return Dialog.show({
+      title: "Wait!",
+      body: "Disabling BypassNSFW requires a restart - would you like to do that now?",
+      confirmText: "Sure",
+      cancelText: "Not now",
+      onConfirm: () => restartApp()
+    })
   }
 }

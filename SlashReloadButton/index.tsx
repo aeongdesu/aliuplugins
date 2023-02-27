@@ -47,4 +47,13 @@ export default class SlashReloadButton extends Plugin {
         }
         patchUI()
     }
+    public stop() {
+        return Dialog.show({
+            title: "Wait!",
+            body: "Disabling SlashReloadButton requires a restart - would you like to do that now?",
+            confirmText: "Sure",
+            cancelText: "Not now",
+            onConfirm: () => restartApp()
+        })
+    }
 }

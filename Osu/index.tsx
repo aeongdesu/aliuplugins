@@ -88,9 +88,11 @@ export default class Osu extends Plugin {
             }
         })
     }
+    
     public stop() {
         this.commands.unregisterAll()
     }
+
     public SettingsModal() {
         const settingsInstance = () => instance.settings
         const useSettings = (name?: string) => {

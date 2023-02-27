@@ -90,4 +90,8 @@ export default class MetroToolsReborn extends Plugin {
             this.logger.error(ex)
         }
     }
+    
+    public stop() {
+        this.commands.unregisterAll()
+    }
 }
