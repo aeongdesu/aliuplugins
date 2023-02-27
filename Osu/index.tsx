@@ -8,14 +8,14 @@ let instance
 // todo
 // use osu!api v1 or v2
 
-const ThemeColorMap = Styles.ThemeColorMap ?? getByProps("SemanticColor").SemanticColor
+const ThemeColorMap = getByProps("colors", "meta").colors
 
 const styles = Styles.createThemedStyleSheet({
     subText: {
         fontSize: 18,
         marginTop: 15,
         marginLeft: 15,
-        color: ThemeColorMap.INTERACTIVE_MUTED,
+        color: ThemeColorMap.HEADER_PRIMARY,
         fontFamily: Constants.Fonts.PRIMARY_NORMAL
     },
     textLink: {
