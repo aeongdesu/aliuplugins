@@ -40,7 +40,7 @@ export default function PluginsPage() {
             return setResults(results)
         }
         getPlugins()
-    }, [isEnabled])
+    }, [])
 
     return (<>
         {/* @ts-ignore */}
