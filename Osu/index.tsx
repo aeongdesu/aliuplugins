@@ -3,7 +3,7 @@ import { Constants, Forms, React, Styles, ReactNative, getByProps, MessageAction
 import { ApplicationCommandOptionType } from "aliucord/api"
 const { FormSection, FormInput, FormDivider } = Forms
 const { Text, ScrollView } = ReactNative
-let instance
+let instance: any
 
 // todo
 // use osu!api v1 or v2

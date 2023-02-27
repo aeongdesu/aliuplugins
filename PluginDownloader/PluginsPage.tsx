@@ -12,7 +12,7 @@ import { getAssetId } from "aliucord/utils"
 import PluginDownloader from "./index"
 
 const Button = getByProps("ButtonColors", "ButtonLooks", "ButtonSizes").default as any
-const { useState, useEffect, useCallback } = React
+const { useState, useEffect } = React
 const { ScrollView } = ReactNative
 
 const styles = Styles.createThemedStyleSheet({
@@ -21,24 +21,26 @@ const styles = Styles.createThemedStyleSheet({
 
 export default function PluginsPage() {
     const matches = PluginDownloader.matches
-    const [plugins, setResults] = useState([])
+    const [plugins, setResults] = useState<string[]>([])
     const [isEnabled, setEnabled] = useState({ id: -1, status: false })
+
     useEffect(() => {
         const getPlugins = async () => {
-            const url = `https://cdn.jsdelivr.net/gh/${matches[1]}/${matches[2]}@builds/`
-            const data = await fetch(url)
-            if (!data.ok) return []
+            const data = await fetch(`https://github.com/${matches[1]}/${matches[2]}/tree/builds`, {
+                headers: {
+                    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
+                }
+            })
             const text = await data.text()
-            const regex = /(\w+)\.zip</g
-            let hmatches, results: string[] = []
-            while (hmatches = regex.exec(text)) {
-                results.push(hmatches[1])
+            const regex = /data-turbo-frame="repo-content-turbo-frame"\shref="(?:[A-Za-z0-9\-_.\/]+)">(\w+)\.zip<\/a>/g
+            let hmatches: string[], results: string[] = []
+            while (hmatches = regex.exec(text)!) {
+                results.push(hmatches![1])
             }
-            // @ts-ignore
             return setResults(results)
         }
         getPlugins()
-    }, [])
+    }, [isEnabled])
 
     return (<>
         {/* @ts-ignore */}
@@ -58,7 +60,7 @@ export default function PluginsPage() {
                                     await PluginDownloader.aliucord.api.uninstallPlugin(pluginName)
                                     return setEnabled({ id: index, status: false })
                                 }
-                                await fs.download(`https://cdn.jsdelivr.net/gh/${matches[1]}/${matches[2]}@builds/${pluginName}.zip`, `${PLUGINS_DIRECTORY}${pluginName}.zip`)
+                                await fs.download(`https://raw.githubusercontent.com/${matches[1]}/${matches[2]}/builds/${pluginName}.zip`, `${PLUGINS_DIRECTORY}${pluginName}.zip`)
                                 await PluginDownloader.aliucord.api.startPlugins()
                                 plugin = PluginDownloader.aliucord.api.plugins[pluginName]
                                 if (plugin) {
