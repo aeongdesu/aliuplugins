@@ -27,7 +27,7 @@ export default class PluginDownloader extends Plugin {
             let args = ctx.args
             if (args[1] !== "LongPressUrl") return
             const [, , { header: { title: url }, options }] = args
-            if (options[options.length - 1].label == "Install Plugin") return
+            if (options[options.length - 1].label == "Install Plugin" || options[options.length - 1].label == "Install Plugins") return
             if (zip.test(url)) {
                 options.push({
                     label: "Install Plugin",
