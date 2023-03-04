@@ -40,7 +40,7 @@ export default class ViewRaw extends Plugin {
                             component.props.children.props.children.props.children[1] = [<ButtonRow
                                 key={-1}
                                 message="View Raw"
-                                iconSource={getAssetId("ic_message")}
+                                iconSource={getAssetId("ic_chat_bubble_16px")}
                                 onPressRow={() => {
                                     ActionSheet.hideActionSheet()
                                     Navigation.push(navigator)
