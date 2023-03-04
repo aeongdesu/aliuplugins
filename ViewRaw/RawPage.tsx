@@ -14,7 +14,7 @@ export default function RawPage() {
         <ScrollView>
             <TouchableOpacity onLongPress={() => {
                 Clipboard.setString(message)
-                Toasts.open({ content: "Copied Raw data to clipboard", source: getAssetId("toast_copy_link") })
+                Toasts.open({ content: "Copied raw data to clipboard", source: getAssetId("toast_copy_link") })
             }}>
                 <FormText style={{ fontFmaily: Constants.Fonts.CODE_SEMIBOLD, fontSize: 12 }}>
                     {message}
