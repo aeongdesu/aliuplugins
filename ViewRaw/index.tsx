@@ -4,10 +4,9 @@ import { React, ReactNative, getByProps, Dialog, Toasts } from "aliucord/metro"
 import { getAssetId } from "aliucord/utils"
 import { before, after } from "aliucord/utils/patcher"
 import RawPage from "./RawPage"
-declare let aliucord: any
 
 export default class ViewRaw extends Plugin {
-    static message: string[]
+    static message: any
     public async start() {
         const ActionSheet = getByProps("hideActionSheet")
         const Navigation = getByProps("push", "pushLazy", "pop")
@@ -29,7 +28,7 @@ export default class ViewRaw extends Plugin {
                                     goBackOnBackPress={true}
                                     screens={{
                                         RawPage: {
-                                            title: "RawPage",
+                                            title: "",
                                             headerLeft: getRenderCloseButton(() => Navigation.pop()),
                                             render: RawPage
                                         }
