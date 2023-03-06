@@ -14,9 +14,9 @@ export default class ViewRaw extends Plugin {
         const { default: Navigator, getRenderCloseButton } = DiscordNavigator
 
         before(ActionSheet, "openLazy", (ctx) => {
-            const [component, args] = ctx.args
+            const [asyncComponent, args] = ctx.args
             if (args == "MessageLongPressActionSheet")
-                component.then(instance => {
+                asyncComponent.then(instance => {
                     after(instance, "default", (_, component) => {
                         const [{ props: { message: message } }, oldbuttons] = component.props?.children?.props?.children?.props?.children
                         ViewRaw.message = message
