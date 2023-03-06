@@ -20,7 +20,7 @@ export default function RawPage() {
                     Toasts.open({ content: "Copied data to clipboard", source: getAssetId("toast_copy_link") })
                 }}
             />
-            <Text selectable style={{ fontFamily: Constants.Fonts.CODE_SEMIBOLD, fontSize: 12, backgroundColor: "#282b30", color: "white", marginTop: 10, borderRadius: 3 }}>
+            <Text selectable style={{ fontFamily: Constants.Fonts.CODE_SEMIBOLD, fontSize: 12, backgroundColor: "#282b30", color: "white", marginTop: 10, borderRadius: 3, padding: 10 }}>
                 {message}
             </Text>
         </ScrollView>
