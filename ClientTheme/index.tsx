@@ -18,7 +18,8 @@ export default class ClientTheme extends Plugin {
             const { BackgroundGradientPresetId } = getByProps("BackgroundGradientPresetId")
             updateBackgroundGradientPreset(BackgroundGradientPresetId["CHROMA_GLOW"])
             // hmm
-            getByProps("updateTheme").updateTheme("light")
+            const defaultTheme = getByProps("getThemeOnStart").getThemeOnStart()
+            getByProps("updateTheme").updateTheme(defaultTheme)
         }
         if (UserStore.getCurrentUser()) toEnable()
         else {

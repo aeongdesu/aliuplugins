@@ -28,7 +28,7 @@ export default class ViewRaw extends Plugin {
                                     goBackOnBackPress={true}
                                     screens={{
                                         RawPage: {
-                                            title: "",
+                                            title: "ViewRaw",
                                             headerLeft: getRenderCloseButton(() => Navigation.pop()),
                                             render: RawPage
                                         }
@@ -36,15 +36,15 @@ export default class ViewRaw extends Plugin {
                                 />
                             )
                             if (oldbuttons.filter(a => a.props.message == "View Raw").length > 0) return
-                            component.props.children.props.children.props.children[1] = [<ButtonRow
-                                key={-1}
+                            const MessageIndex = oldbuttons.findIndex(a => a.props.name == "Message")
+                            component.props.children.props.children.props.children[1] = [...oldbuttons, <ButtonRow
                                 message="View Raw"
                                 iconSource={getAssetId("ic_chat_bubble_16px")}
                                 onPressRow={() => {
                                     ActionSheet.hideActionSheet()
                                     Navigation.push(navigator)
                                 }}
-                            />, ...oldbuttons]
+                            />]
                         }
                     })
                 })
