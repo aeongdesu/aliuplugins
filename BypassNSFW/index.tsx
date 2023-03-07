@@ -13,7 +13,9 @@ export default class BypassNSFW extends Plugin {
     instead(NSFWStuff, "shouldNSFWGateGuild", () => false)
     
     after(UserStore, "getCurrentUser", (_, user) => {
-      if (!user?.nsfwAllowed) user.nsfwAllowed = true
+      if (user?.hasOwnProperty("nsfwAllowed")) {
+        user.nsfwAllowed = true
+      }
       return user
     })
   }
