@@ -6,7 +6,7 @@ export default class SlowmodeExtended extends Plugin {
     public async start() {
         let values: number[] = [0, 1]
         for (let i = 2; i <= 60; i++) {
-            if (i % 2 == 0) values.push(i)
+            values.push(i)
         }
         for (let i = 120; i <= 3600; i++) {
             if (i % 60 == 0) values.push(i)
