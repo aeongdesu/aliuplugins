@@ -4,8 +4,8 @@ import { Constants } from "aliucord/metro"
 
 export default class SlowmodeExtended extends Plugin {
     public async start() {
-        let values: number[] = [0, 1]
-        for (let i = 2; i <= 60; i++) {
+        let values: number[] = []
+        for (let i = 0; i <= 60; i++) {
             values.push(i)
         }
         for (let i = 120; i <= 3600; i++) {
