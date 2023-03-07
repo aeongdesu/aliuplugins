@@ -2,7 +2,7 @@ import { Plugin } from "aliucord/entities"
 // @ts-ignore
 import { Constants } from "aliucord/metro"
 
-export default class CustomSlowmode extends Plugin {
+export default class SlowmodeExtended extends Plugin {
     public async start() {
         let values: number[] = [0, 1]
         for (let i = 2; i <= 60; i++) {
