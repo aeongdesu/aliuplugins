@@ -1,33 +1,26 @@
 import { Plugin } from "aliucord/entities"
 // @ts-ignore
-import { FluxDispatcher, UserStore, Dialog } from "aliucord/metro"
+import { UserStore, Dialog, getByProps } from "aliucord/metro"
 // @ts-ignore
 import { restartApp } from "aliucord/native"
+import { after, instead } from "aliucord/utils/patcher"
 
 export default class BypassNSFW extends Plugin {
   public async start() {
-    const toAllow = () => {
-      const user = UserStore.getCurrentUser()
-      user.nsfwAllowed = true
-    }
-
-    if (UserStore.getCurrentUser()) toAllow()
-    else {
-      try {
-        const handle = () => {
-          FluxDispatcher.unsubscribe("CONNECTION_OPEN", handle)
-          toAllow()
-        }
-        FluxDispatcher.subscribe("CONNECTION_OPEN", handle)
-      } catch (e) {
-        this.logger.error(e)
-      }
-    }
+    const NSFWStuff = getByProps("isNSFWInvite")
+    instead(NSFWStuff, "handleNSFWGuildInvite", () => false)
+    instead(NSFWStuff, "isNSFWInvite", () => false)
+    instead(NSFWStuff, "shouldNSFWGateGuild", () => false)
+    
+    after(UserStore, "getCurrentUser", (_, user) => {
+      if (!user?.nsfwAllowed) user.nsfwAllowed = true
+      return user
+    })
   }
   public stop() {
     return Dialog.show({
       title: "Wait!",
-      body: "Disabling BypassNSFW requires a restart - would you like to do that now?",
+      body: `Disabling ${this.name} requires a restart - would you like to do that now?`,
       confirmText: "Sure",
       cancelText: "Not now",
       onConfirm: () => restartApp()
