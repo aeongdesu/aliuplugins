@@ -11,9 +11,10 @@ import { getAssetId } from "aliucord/utils"
 
 import PluginDownloader from "./index"
 
+const Navigation = getByProps("push", "pushLazy", "pop")
 const Button = getByProps("ButtonColors", "ButtonLooks", "ButtonSizes").default as any
 const { useState, useEffect } = React
-const { ScrollView } = ReactNative
+const { ScrollView, Text } = ReactNative
 
 const styles = Styles.createThemedStyleSheet({
     button: { marginTop: 12 }
@@ -41,7 +42,6 @@ export default function PluginsPage() {
         }
         getPlugins()
     }, [])
-
     return (<>
         {/* @ts-ignore */}
         <ScrollView>
@@ -82,4 +82,5 @@ export default function PluginsPage() {
             })}
         </ScrollView>
     </>)
+    // return <>{Navigation.pop()}</>
 }

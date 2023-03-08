@@ -21,7 +21,8 @@ export default class ViewRaw extends Plugin {
                         const [{ props: { message: message } }, oldbuttons] = component.props?.children?.props?.children?.props?.children
                         ViewRaw.message = message
                         if (oldbuttons) {
-                            const ButtonRow = oldbuttons[0].type
+                            const MarkUnreadIndex = oldbuttons.findIndex((a: { props: { message: string } }) => a.props.message == "Mark Unread")
+                            const ButtonRow = oldbuttons[MarkUnreadIndex].type
                             const navigator = () => (
                                 <Navigator
                                     initialRouteName="RawPage"
@@ -35,8 +36,7 @@ export default class ViewRaw extends Plugin {
                                     }}
                                 />
                             )
-                            if (oldbuttons.filter(a => a.props.message == "View Raw").length > 0) return
-                            const MessageIndex = oldbuttons.findIndex(a => a.props.name == "Message")
+                            if (oldbuttons.filter((a: { props: { message: string } }) => a.props.message == "View Raw").length > 0) return
                             component.props.children.props.children.props.children[1] = [...oldbuttons, <ButtonRow
                                 message="View Raw"
                                 iconSource={getAssetId("ic_chat_bubble_16px")}
