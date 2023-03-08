@@ -14,7 +14,7 @@ import PluginDownloader from "./index"
 const Navigation = getByProps("push", "pushLazy", "pop")
 const Button = getByProps("ButtonColors", "ButtonLooks", "ButtonSizes").default as any
 const { useState, useEffect } = React
-const { ScrollView, Text } = ReactNative
+const { ScrollView } = ReactNative
 
 const styles = Styles.createThemedStyleSheet({
     button: { marginTop: 12 }
@@ -42,7 +42,6 @@ export default function PluginsPage() {
             return setResults(results)
         }
         getPlugins()
-        console.log("hi")
     }, [matches])
     return (<>
         {/* @ts-ignore */}
