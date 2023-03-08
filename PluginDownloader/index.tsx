@@ -49,7 +49,7 @@ export default class PluginDownloader extends Plugin {
             */
             const rawurl = (name: string) => `https://raw.githubusercontent.com/${matches[1]}/${matches[2]}/builds/${name}`
             try {
-                const manifest = await fetch(rawurl(`${matches[3]}-manifest.json`))
+                const manifest = await fetch(rawurl(`${matches[3]}-manifest.json`), { cache: "no-store" })
                 if (!manifest.ok) return Toasts.open({ content: "Wrong plugin URL", source: getAssetId("Small") })
                 const pluginName = (await manifest.json()).name
 

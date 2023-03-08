@@ -28,6 +28,7 @@ export default function PluginsPage() {
     useEffect(() => {
         const getPlugins = async () => {
             const data = await fetch(`https://github.com/${matches[1]}/${matches[2]}/tree/builds`, {
+                cache: "no-store",
                 headers: {
                     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
                 }
@@ -41,7 +42,8 @@ export default function PluginsPage() {
             return setResults(results)
         }
         getPlugins()
-    }, [])
+        console.log("hi")
+    }, [matches])
     return (<>
         {/* @ts-ignore */}
         <ScrollView>
