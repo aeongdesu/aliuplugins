@@ -2,7 +2,7 @@
 
 import { Plugin } from "aliucord/entities"
 // @ts-ignore
-import { UserStore, getByProps, Dialog, FluxDispatcher } from "aliucord/metro"
+import { UserStore, getByProps, Dialog, FluxDispatcher, setAMOLEDThemeEnabled } from "aliucord/metro"
 // @ts-ignore
 import { restartApp } from "aliucord/native"
 
@@ -27,6 +27,9 @@ export default class ExperimentsReborn extends Plugin {
 
             // Remove 1 from local user flags, removing staff badge but leaving experiments intact
             UserStore.getCurrentUser().flags -= 1
+
+            const { setAMOLEDOption } = setAMOLEDThemeEnabled
+            setAMOLEDOption()
         }
 
 
