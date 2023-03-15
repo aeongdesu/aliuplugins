@@ -82,11 +82,14 @@ export default class PluginDownloader extends Plugin {
         }
 
         this.patcher.before(ActionSheet, "openLazy", (ctx) => {
-            const [asyncComponent, args] = ctx.args
+            const [asyncComponent, args, actionMessage] = ctx.args
             if (args == "MessageLongPressActionSheet") {
                 asyncComponent.then((instance: any) => {
                     const unpatch = this.patcher.after(instance, "default", (_, component: any) => {
-                        const [{ props: { message: message } }, oldbuttons] = component.props?.children?.props?.children?.props?.children
+                        const [msgProps, oldbuttons] = component.props?.children?.props?.children?.props?.children
+                        let message: any
+                        if (!msgProps) message = actionMessage
+                        else message = msgProps.props.message
                         if (oldbuttons) {
                             const MarkUnreadIndex = oldbuttons.findIndex((a: { props: { message: string } }) => a.props.message == "Mark Unread")
                             const ButtonRow = oldbuttons[MarkUnreadIndex].type
