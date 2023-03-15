@@ -88,7 +88,7 @@ export default class PluginDownloader extends Plugin {
                     const unpatch = this.patcher.after(instance, "default", (_, component: any) => {
                         const [msgProps, oldbuttons] = component.props?.children?.props?.children?.props?.children
                         let message: any
-                        if (!msgProps) message = actionMessage
+                        if (!msgProps) message = actionMessage.message
                         else message = msgProps.props.message
                         if (oldbuttons) {
                             const MarkUnreadIndex = oldbuttons.findIndex((a: { props: { message: string } }) => a.props.message == "Copy Message Link")

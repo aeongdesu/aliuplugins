@@ -13,12 +13,12 @@ export default class ViewRaw extends Plugin {
         const { default: Navigator, getRenderCloseButton } = DiscordNavigator
 
         this.patcher.before(ActionSheet, "openLazy", (ctx) => {
-            const [asyncComponent, args, message] = ctx.args
+            const [asyncComponent, args, actionMessage] = ctx.args
             if (args == "MessageLongPressActionSheet")
                 asyncComponent.then(instance => {
                     const unpatch = this.patcher.after(instance, "default", (_, component: any) => {
                         const [msgProps, oldbuttons] = component.props?.children?.props?.children?.props?.children
-                        if (!msgProps) ViewRaw.message = message
+                        if (!msgProps) ViewRaw.message = actionMessage.message
                         else ViewRaw.message = msgProps.props.message
                         if (oldbuttons) {
                             const MarkUnreadIndex = oldbuttons.findIndex((a: { props: { message: string } }) => a.props.message == "Copy Message Link")
