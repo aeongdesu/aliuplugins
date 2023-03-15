@@ -1,5 +1,4 @@
 import { findInReactTree, getAssetId } from "aliucord/utils"
-import { after } from "aliucord/utils/patcher"
 import { Plugin } from "aliucord/entities"
 // @ts-ignore
 import { Dialog, ReactNative, Forms, React, getByName, Locale } from "aliucord/metro"
@@ -19,10 +18,10 @@ export default class SlashReloadButton extends Plugin {
             const { FormRow } = Forms
             const UserSettingsOverviewWrapper = getByName("UserSettingsOverviewWrapper", { default: false })
 
-            const unpatch = after(UserSettingsOverviewWrapper, "default", (_, res) => {
+            const unpatch = this.patcher.after(UserSettingsOverviewWrapper, "default", (_, res: any) => {
                 const Overview = findInReactTree(res, m => m.type?.name === "UserSettingsOverview")
 
-                after(Overview.type.prototype, "render", (res, { props }) => {
+                this.patcher.after(Overview.type.prototype, "render", (res, { props }) => {
                     const { children } = props
                     const searchable = [Locale.Messages["BILLING_SETTINGS"], Locale.Messages["PREMIUM_SETTINGS"]]
                     const index = children.findIndex(x => searchable.includes(x.props.title))
@@ -41,19 +40,12 @@ export default class SlashReloadButton extends Plugin {
                         />
                     </>)
                 })
-
                 unpatch()
             })
         }
         patchUI()
     }
     public stop() {
-        return Dialog.show({
-            title: "Wait!",
-            body: "Disabling SlashReloadButton requires a restart - would you like to do that now?",
-            confirmText: "Sure",
-            cancelText: "Not now",
-            onConfirm: () => restartApp()
-        })
+        this.patcher.unpatchAll()
     }
 }

@@ -8,7 +8,6 @@ import { React, getByProps, Dialog, Toasts } from "aliucord/metro"
 import { getAssetId } from "aliucord/utils"
 // @ts-ignore
 import { PLUGINS_DIRECTORY } from "aliucord/utils/constants"
-import { before, after } from "aliucord/utils/patcher"
 // @ts-ignore
 import { fs } from "aliucord/native"
 
@@ -82,16 +81,15 @@ export default class PluginDownloader extends Plugin {
             }
         }
 
-        before(ActionSheet, "openLazy", (ctx) => {
+        this.patcher.before(ActionSheet, "openLazy", (ctx) => {
             const [asyncComponent, args] = ctx.args
             if (args == "MessageLongPressActionSheet") {
                 asyncComponent.then((instance: any) => {
-                    after(instance, "default", (_, component) => {
+                    const unpatch = this.patcher.after(instance, "default", (_, component: any) => {
                         const [{ props: { message: message } }, oldbuttons] = component.props?.children?.props?.children?.props?.children
                         if (oldbuttons) {
                             const MarkUnreadIndex = oldbuttons.findIndex((a: { props: { message: string } }) => a.props.message == "Mark Unread")
                             const ButtonRow = oldbuttons[MarkUnreadIndex].type
-                            if (oldbuttons.filter((a: { props: { message: string } }) => a.props.message == "Install Plugin" || a.props.message == "Open PluginDownloader").length > 0) return
 
                             if (zip.test(message.content)) {
                                 component.props.children.props.children.props.children[1] = [<ButtonRow
@@ -114,12 +112,12 @@ export default class PluginDownloader extends Plugin {
                                 />, ...oldbuttons]
                             }
                         }
+                        unpatch()
                     })
                 })
             }
             else if (args == "LongPressUrl") {
                 const [, , { header: { title: url }, options }] = ctx.args
-                if (options.filter((option: { label: string }) => option.label == "Install Plugin" || option.label == "Open PluginDownloader").length > 0) return
                 if (zip.test(url)) {
                     options.push({
                         label: "Install Plugin",
@@ -134,5 +132,8 @@ export default class PluginDownloader extends Plugin {
                 }
             }
         })
+    }
+    public stop() {
+        this.patcher.unpatchAll()
     }
 }

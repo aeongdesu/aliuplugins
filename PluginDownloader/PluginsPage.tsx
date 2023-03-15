@@ -45,7 +45,7 @@ export default function PluginsPage() {
     }, [matches])
     return (<>
         {/* @ts-ignore */}
-        <ScrollView>
+        <ScrollView style={{ flex: 1, marginHorizontal: 10, marginVertical: 10 }}>
             {plugins.map((pluginName, index) => {
                 let plugin = PluginDownloader.aliucord.api.plugins[pluginName]
                 return (

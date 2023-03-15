@@ -4,7 +4,7 @@ specifiers:
   '@aliucord/hermesc': 0.70.6-aliucord-2
   '@aliucord/rollup-plugin': ^1.0.4
   '@rollup/plugin-typescript': ^11.0.0
-  '@types/node': ^18.15.0
+  '@types/node': ^18.15.3
   '@types/react': ^18.0.28
   '@types/react-native': ^0.71.3
   aliucord: ^0.1.0
@@ -17,7 +17,7 @@ devDependencies:
   '@aliucord/hermesc': 0.70.6-aliucord-2
   '@aliucord/rollup-plugin': 1.0.4_xa2vpwtl6vfntyy7n5jtoz6rzm
   '@rollup/plugin-typescript': 11.0.0_6xpx4ownnv75244cfyuvoru6ci
-  '@types/node': 18.15.0
+  '@types/node': 18.15.3
   '@types/react': 18.0.28
   '@types/react-native': 0.71.3
   aliucord: 0.1.0
@@ -241,8 +241,8 @@ packages:
     resolution: {integrity: sha512-WulqXMDUTYAXCjZnk6JtIHPigp55cVtDgDrO2gHRwhyJto21+1zbVCtOYB2L1F9w4qCQ0rOGWBnBe0FNTiEJIQ==}
     dev: true
 
-  /@types/node/18.15.0:
-    resolution: {integrity: sha512-z6nr0TTEOBGkzLGmbypWOGnpSpSIBorEhC4L+4HeQ2iezKCi4f77kyslRwvHeNitymGQ+oFyIWGP96l/DPSV9w==}
+  /@types/node/18.15.3:
+    resolution: {integrity: sha512-p6ua9zBxz5otCmbpb5D3U4B5Nanw6Pk3PPyX05xnxbB/fRv71N7CPmORg7uAD5P70T0xmx1pzAx/FUfa5X+3cw==}
     dev: true
 
   /@types/prop-types/15.7.5:
