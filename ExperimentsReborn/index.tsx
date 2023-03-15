@@ -29,7 +29,7 @@ export default class ExperimentsReborn extends Plugin {
             UserStore.getCurrentUser().flags -= 1
 
             const { setAMOLEDThemeEnabled } = AMOLEDThemeManager
-            setAMOLEDThemeEnabled()
+            // setAMOLEDThemeEnabled()
         }
 
 
