@@ -21,7 +21,7 @@ export default class ViewRaw extends Plugin {
                         if (!msgProps) ViewRaw.message = message
                         else ViewRaw.message = msgProps.props.message
                         if (oldbuttons) {
-                            const MarkUnreadIndex = oldbuttons.findIndex((a: { props: { message: string } }) => a.props.message == "Mark Unread")
+                            const MarkUnreadIndex = oldbuttons.findIndex((a: { props: { message: string } }) => a.props.message == "Copy Message Link")
                             const ButtonRow = oldbuttons[MarkUnreadIndex].type
                             const navigator = () => (
                                 <Navigator

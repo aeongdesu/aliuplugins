@@ -91,7 +91,7 @@ export default class PluginDownloader extends Plugin {
                         if (!msgProps) message = actionMessage
                         else message = msgProps.props.message
                         if (oldbuttons) {
-                            const MarkUnreadIndex = oldbuttons.findIndex((a: { props: { message: string } }) => a.props.message == "Mark Unread")
+                            const MarkUnreadIndex = oldbuttons.findIndex((a: { props: { message: string } }) => a.props.message == "Copy Message Link")
                             const ButtonRow = oldbuttons[MarkUnreadIndex].type
 
                             if (zip.test(message.content)) {
